@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>コンプガチャ期待値シミュレータ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f8f8ff;
+      padding: 20px;
+    }
+    h1 {
+      color: #4a4a4a;
+    }
+    input {
+      width: 80px;
+      font-size: 1em;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #e0e0ff;
+    }
+    #total {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>ランダムカード系グッズ コンプ期待値ツール</h1>
+  <label>カード種類数（n）:
+    <input type="number" id="cardCount" min="1" value="10">
+  </label>
+  <button onclick="calculate()">計算する</button>
+
+  <div id="total"></div>
+  <table id="resultTable">
+    <thead>
+      <tr>
+        <th>枚目</th>
+        <th>新規カードが出る確率</th>
+        <th>期待される試行回数</th>
+        <th>累積試行回数</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <script>
+    function calculate() {
+      const n = parseInt(document.getElementById("cardCount").value);
+      const tableBody = document.querySelector("#resultTable tbody");
+      tableBody.innerHTML = "";  // 初期化
+      let total = 0;
+
+      for (let i = 1; i <= n; i++) {
+        const prob = (n - i + 1) / n;
+        const expected = 1 / prob;
+        total += expected;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${i}</td>
+          <td>${prob.toFixed(4)}</td>
+          <td>${expected.toFixed(4)}</td>
+          <td>${total.toFixed(4)}</td>
+        `;
+        tableBody.appendChild(row);
+      }
+
+      document.getElementById("total").textContent =
+        `📦 全${n}種コンプリートの期待値：${total.toFixed(2)}回`;
+    }
+  </script>
+</body>
+</html>
